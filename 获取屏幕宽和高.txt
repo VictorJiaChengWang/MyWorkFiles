@@ -1,0 +1,13 @@
+android获得屏幕高度和宽度
+android获取屏幕的高度和宽度用到WindowManager这个类，两种方法： 
+ 
+1、WindowManager wm = (WindowManager) getContext()
+                    .getSystemService(Context.WINDOW_SERVICE);
+ 
+     int width = wm.getDefaultDisplay().getWidth();
+     int height = wm.getDefaultDisplay().getHeight();
+ 
+2、WindowManager wm = this.getWindowManager();
+ 
+     int width = wm.getDefaultDisplay().getWidth();
+     int height = wm.getDefaultDisplay().getHeight();

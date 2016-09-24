@@ -1,0 +1,32 @@
+横竖屏切换时，如果在代码中动态修改控件位置属性，必须先将它之前的位置属性Remove掉，否则设置无效，例如：
+
+videoplayerfullscreentop.xml
+----------------------------
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/videoplayername_contain"
+        android:layout_centerInParent="true"
+        android:maxWidth="@dimen/_810px">
+        <!--视频标题-->
+        <TextView
+            android:id="@+id/videoplayername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/_810px"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_48px" />
+    </RelativeLayout>
+----------------------------
+在上述RelativeLayout布局中，位置属性是android:layout_centerInParent="true"，这是竖屏状态下的位置，如果在横屏状态下要改变位置为居左，则应该在代码中Remove掉“居中”这个位置属性，再添加“居左”这个属性，代码如下：
+----------------------------
+RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mViseoPlayerVideoName.getLayoutParams();
+首先你要先Remove掉这个居中属性
+params.removeRule(RelativeLayout.CENTER_IN_PARENT);
+再添加居左这个属性
+params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+----------------------------
+这样设置位置属性才会生效，否则一直居中显示！

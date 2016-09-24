@@ -1,0 +1,12 @@
+
+在代码里面动态设置px值方法:
+
+		m1px = this.getResources().getDimension(R.dimen._1px);
+		private float m45px; 
+		m45px = 45 * m1px;
+		
+		float margin m45px ;
+		
+		引用：
+		
+		paramBottom.setMargin(0,margin,0margin);
