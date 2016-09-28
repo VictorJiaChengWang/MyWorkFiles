@@ -1,0 +1,5 @@
+ SimpleDateFormat dfBefore = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        Log.d("wjc", "获取视频文件列表之前的时间="+dfBefore.format(new Date()));
+
+ SimpleDateFormat dfAfter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        Log.d("wjc", "获取视频文件列表之前的时间="+dfAfter.format(new Date()));

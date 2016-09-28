@@ -1,0 +1,50 @@
+    private AlertDialog mDeletingAlertDialog;
+    private TextView mDeletingProgressTextView;
+    private  SeekBar mDeletingProgressSeekBar;
+    private void ShowDeletingProgressDialog(final int count) throws InterruptedException {
+        View dialogView = LayoutInflater.from(getApplicationContext())
+                .inflate(R.layout.activity_deleting_progress_dialog, null);
+        mDeletingProgressTextView = (TextView) dialogView.findViewById(R.id.deleting_progress_textview_id);
+        mDeletingProgressSeekBar = (SeekBar) dialogView.findViewById(R.id.deleting_progress_seekbar_id);
+        mDeletingProgressTextView.setText("正在删除1/" + count);
+        mDeletingProgressSeekBar.setMax(count);
+        mDeletingProgressSeekBar.setProgress(1);
+        mDeletingAlertDialog = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setView(dialogView)
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).create();
+        mDeletingAlertDialog.show();
+        Message msg = new Message();
+        msg.arg1=1;
+        msg.arg2=count;
+        mHandler.sendMessage(msg);
+    }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            int totalNum = msg.arg2;
+            int currentNum = msg.arg1;
+            mDeletingProgressSeekBar.setMax(totalNum);
+            StringBuilder mStringBuilder = new StringBuilder();
+            mStringBuilder.append("正在删除");
+            mStringBuilder.append(currentNum);
+            mStringBuilder.append("/");
+            mStringBuilder.append(totalNum);
+            mDeletingProgressTextView.setText(mStringBuilder);
+            mDeletingProgressSeekBar.setProgress(currentNum);
+            Log.d("wjc", "handleMessage: currentNum="+currentNum);
+            if (currentNum == totalNum) {
+                mDeletingAlertDialog.cancel();
+            }
+            if (mDeletingAlertDialog.isShowing()) {
+                Message msg1 = new Message();
+                msg1.arg1=currentNum+1;
+                msg1.arg2=totalNum;
+                mHandler.sendMessageDelayed(msg1,200);
+            }
+
+        }
+    };

@@ -1,0 +1,86 @@
+[java] view plain copy print?在CODE上查看代码片派生到我的代码片
+package com.jph.monitorphone;  
+  
+import java.io.FileNotFoundException;  
+import java.io.FileOutputStream;  
+import java.io.PrintStream;  
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
+import android.os.Bundle;  
+import android.app.Activity;  
+import android.content.Context;  
+import android.telephony.PhoneStateListener;  
+import android.telephony.TelephonyManager;  
+/** 
+ * Describe:</br> 
+ * 监视手机来电 
+ * 本实例实现了监视当前手机的来电状态， 
+ * 并将来电与接听纪录写入log_phone文件中 
+ * @author jph 
+ * Date:2014.07.22 
+ * */  
+public class MonitorPhone extends Activity {  
+    TelephonyManager tManager;  
+    private String incomingNumber;  
+    @Override  
+    protected void onCreate(Bundle savedInstanceState) {  
+        super.onCreate(savedInstanceState);  
+        setContentView(R.layout.main);  
+        //获取系统的TelephonyManager对象  
+        tManager=(TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);  
+        //创建一个通话状态监听器  
+        PhoneStateListener pListener=new PhoneStateListener(){  
+            @Override  
+            public void onCallStateChanged(int state, String number) {  
+                // TODO Auto-generated method stub  
+                switch (state) {  
+                case TelephonyManager.CALL_STATE_IDLE://无任何状态                     
+                    break;  
+                case TelephonyManager.CALL_STATE_OFFHOOK://接听来电   
+                    writeFile(state,number);  
+                    break;  
+                case TelephonyManager.CALL_STATE_RINGING://来电     
+                    incomingNumber=number;  
+                    writeFile(state,number);  
+                    break;  
+                default:  
+                    break;  
+                }                 
+                super.onCallStateChanged(state, incomingNumber);  
+            }             
+        };  
+        //为tManager添加监听器  
+        tManager.listen(pListener, PhoneStateListener.LISTEN_CALL_STATE);  
+    }  
+   //将接听电话，与来电信息写入到文件  
+    protected void writeFile(int state, String number) {  
+        // TODO Auto-generated method stub  
+        StringBuffer sb=new StringBuffer();  
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh.mm.ss");  
+        sb.append("时间："+sdf.format(new Date())+"\n");  
+        switch (state) {          
+        case TelephonyManager.CALL_STATE_OFFHOOK://接听来电   
+            sb.append("接听了电话号为："+incomingNumber+"的电话");  
+            break;  
+        case TelephonyManager.CALL_STATE_RINGING://来电     
+            sb.append(number+"来电");  
+            break;        
+        }  
+        sb.append("\n-----------------------\n");  
+        FileOutputStream fos=null;  
+        try {  
+            //以追加的方式打开输出流  
+            fos=openFileOutput("log_phone", MODE_APPEND);  
+              
+        } catch (FileNotFoundException e) {  
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+        }         
+        //将输出流封装成PrintStream对象  
+        PrintStream ps=new PrintStream(fos);  
+        //输入文件内容  
+        ps.println(sb.toString());  
+        //关闭输出流  
+        ps.close();  
+    }  
+}  
