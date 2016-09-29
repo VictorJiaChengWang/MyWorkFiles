@@ -1,0 +1,36 @@
+1.连接USB
+
+2.开始 ----> cmd----> enter ----> 
+
+adb shell monkey -p com.bbk.recorder -v 10000
+
+---->enter
+
+monkey测试开始了如何能强制停止呢？
+
+ps命令  查找uiautomator的进程
+
+<1>找进程
+
+打开cmd命令行窗口
+
+输入：
+
+1.adb shell 
+
+2.top | grep "monkey"
+
+显示如下：
+
+top | grep "monkey"
+
+ 5447  0   1% S    10 262960K  10328K     root     com.android.commands.monkey
+ 5447  0   0% S    10 262960K  10324K     root     com.android.commands.monkey
+
+找到id为5447，然后再kill掉就OK了
+
+^C
+
+3. adb shell
+
+4. kill -9 7347
